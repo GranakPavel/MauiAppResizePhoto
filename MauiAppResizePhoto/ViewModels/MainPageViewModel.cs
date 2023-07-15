@@ -28,6 +28,7 @@ namespace MauiAppResizePhoto.ViewModels
 
         [ObservableProperty]
         private string imageSourceFileLenght;
+
         [ObservableProperty]
         private string imageResizeFileLenght;
 
