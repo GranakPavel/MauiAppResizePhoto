@@ -5,6 +5,7 @@ using MauiAppResizePhoto.Models;
 
 //#if IOS || ANDROID || MACCATALYST
 using Microsoft.Maui.Graphics.Platform;
+using System.ComponentModel;
 //#elif WINDOWS
 //using Microsoft.Maui.Graphics.Win2D;
 //#endif
@@ -108,6 +109,14 @@ namespace MauiAppResizePhoto.ViewModels
         public MainPageViewModel(PhotoCache photoCache)
         { 
             PhotoCache = photoCache;
+        }
+
+        [RelayCommand]
+        public void TestGC()
+        {
+            IsBusy = true;
+            GC.Collect();
+            IsBusy = false;
         }
 
 

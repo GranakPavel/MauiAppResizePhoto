@@ -45,5 +45,6 @@
 
         <Button Grid.Column="0" Grid.Row="2" Text="Capture photo" Command="{Binding CapturePhotoCommand}" HorizontalOptions="Center" Margin="5"></Button>
         <Button Grid.Column="1" Grid.Row="2" Text="Clear all photo" Command="{Binding PhotoCache.ClearAllPhotoCommand}" HorizontalOptions="Center" Margin="5" ></Button>
+        
     </Grid>
 </ContentPage>
