@@ -1,6 +1,7 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MauiAppResizePhoto.Models;
 
 //#if IOS || ANDROID || MACCATALYST
 using Microsoft.Maui.Graphics.Platform;
@@ -14,6 +15,10 @@ namespace MauiAppResizePhoto.ViewModels
 {
     public partial class MainPageViewModel: BaseViewModel
     {
+
+        [ObservableProperty]
+        private PhotoCache photoCache;
+
         [ObservableProperty]
         private bool isBusy;
 
@@ -33,23 +38,23 @@ namespace MauiAppResizePhoto.ViewModels
         private string imageResizeFileLenght;
 
         [RelayCommand]
-        public async Task ClearPhoto()
+        public async Task ClearPreviewPhoto()
         {
             IsBusy = true;
             await Task.Delay(10);
 
-            FullImage = null; // new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
-            SmallImage = null;  // new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
-            
+            FullImage = null; 
+            SmallImage = null;
+            ImageResizeFileLenght = string.Empty;
+
             IsBusy = false; 
         }
-
 
         [RelayCommand]
         public async Task CapturePhoto()
         {
 
-            await ClearPhoto();
+            await ClearPreviewPhoto();
 
             IsBusy = true;
             await Task.Delay(10);
@@ -72,21 +77,24 @@ namespace MauiAppResizePhoto.ViewModels
 
                     //using Stream sourceStream =  photo.OpenReadAsync().Result;  
 
-                    IImage image;
-                    IImage image2;
-                  
+                    IImage image = PlatformImage.FromStream(photo.OpenReadAsync().Result);
 
-                    image = PlatformImage.FromStream(photo.OpenReadAsync().Result);
-                  
-                   // Zobrazení originální velké fotky trvá dlouho
-                   // FullImage = image.AsBytes();
-                   // ImageSourceFileLenght = string.Format("{0}x{1} {2} Kb", image.Width, image.Height, FullImage.GetLength(0) / 1024);
-                   // await Task.Delay(10);
+                    // Zobrazení originální velké fotky trvá dlouho
+                    // FullImage = image.AsBytes();
+                    // ImageSourceFileLenght = string.Format("{0}x{1} {2} Kb", image.Width, image.Height, FullImage.GetLength(0) / 1024);
+                    // await Task.Delay(10);
 
-                    image2 = image.Downsize(1280, false); 
+                    IImage image2 = image.Downsize(1280, false); 
                     SmallImage = image2.AsBytes();
                     ImageResizeFileLenght = string.Format("{0}x{1} {2} Kb", image2.Width, image2.Height, SmallImage.GetLength(0) / 1024);
 
+                    MauiAppResizePhoto.Models.Photo p = new Photo();
+                    p.Id = Guid.NewGuid();  
+                    p.SmallImage = SmallImage;
+                    p.FileLenghtKb = SmallImage.GetLength(0) / 1024;
+                    p.Create = DateTime.Now;
+
+                    PhotoCache.SmallPhotoColl.Add(p);
 
                     image.Dispose();
                     image2.Dispose();
@@ -96,6 +104,12 @@ namespace MauiAppResizePhoto.ViewModels
             }
             IsBusy = false; 
         }
+
+        public MainPageViewModel(PhotoCache photoCache)
+        { 
+            PhotoCache = photoCache;
+        }
+
 
     }
 }

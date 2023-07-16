@@ -7,7 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
+        Title="Resize photo"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 

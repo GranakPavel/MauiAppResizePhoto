@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Maui;
+using MauiAppResizePhoto.Models;
 using MauiAppResizePhoto.ViewModels;
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
 namespace MauiAppResizePhoto;
 
@@ -19,6 +19,7 @@ public static class MauiProgram
 			})
             .UseMauiCommunityToolkit();
 
+		builder.Services.AddSingleton<PhotoCache>();
         builder.Services.AddSingleton<MainPage>();
         builder.Services.AddSingleton<MainPageViewModel>();	
 
